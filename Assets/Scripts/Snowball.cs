@@ -15,7 +15,7 @@ public class Snowball : MonoBehaviour
     private bool m_IsTargered;
     private Vector3 m_PlayerPrevPosition;
     private Transform m_RootTransform;
-    private Transform m_PlayerTransform;
+    //private Transform m_PlayerTransform;
     private Vector3 m_StartScale;
 
     private void OnTriggerEnter(Collider other)
@@ -25,13 +25,15 @@ public class Snowball : MonoBehaviour
             GetComponent<SphereCollider>().isTrigger = false;
 
             Character character = other.GetComponent<Character>();
-            transform.SetParent(character.CharacterRoot);
+            other.enabled = false;
+
+            transform.SetParent(other.transform);
             transform.localPosition = new Vector3(0, transform.localScale.x * 0.5f, transform.localScale.x * 0.5f + m_BallOffset);
 
             m_StartScale = transform.localScale;
             m_RootTransform = character.transform;
             m_PlayerPrevPosition = m_RootTransform.position;
-            m_PlayerTransform = character.CharacterAnimator.transform;
+            //m_PlayerTransform = character.CharacterAnimator.transform;
             m_Distance = 0;
             m_IsTargered = true;
         }
@@ -56,6 +58,6 @@ public class Snowball : MonoBehaviour
             transform.localScale = m_StartScale + Vector3.one * m_Distance * m_GrowSpeed;
         }
 
-        transform.localPosition = new Vector3(0, transform.localScale.x * 0.5f, transform.localScale.x * 0.5f + m_BallOffset + m_PlayerTransform.localPosition.z);
+        transform.localPosition = new Vector3(0, transform.localScale.x * 0.5f, transform.localScale.x * 0.5f + m_BallOffset);
     }
 }
