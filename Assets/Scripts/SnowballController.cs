@@ -1,7 +1,9 @@
 using UnityEngine;
 
 public class SnowballController : MonoBehaviour
-{    
+{
+    [SerializeField]
+    private IndentDraw m_IndentDraw;
     [SerializeField]
     private float m_GrowSpeed = 1;
     [SerializeField]
@@ -55,6 +57,7 @@ public class SnowballController : MonoBehaviour
         if (m_IsTargered)
         {
             UpdateDistance();
+            DrawTrail();
         }
     }
 
@@ -84,6 +87,7 @@ public class SnowballController : MonoBehaviour
     {
         AxisOffset = value;
         m_SliderValue.text = value.ToString("0.0");
+
         if (m_IsTargered)
         {
             UpdateCollidersState();
@@ -95,5 +99,13 @@ public class SnowballController : MonoBehaviour
         m_PlayerCollider.enabled = AxisOffset > 0;
         m_BaseCollider.enabled = AxisOffset == 1;
         m_SphereCollider.isTrigger = AxisOffset == 1;
+    }
+
+    private void DrawTrail()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 100, 1 << 4))
+        {
+            m_IndentDraw.IndentAt(hit, transform.localScale.x*0.5f);
+        }
     }
 }
