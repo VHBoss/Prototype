@@ -20,6 +20,7 @@ public class Character : MonoBehaviour
     {
         m_Collider = GetComponent<CapsuleCollider>();
         m_Rigidbody = GetComponent<Rigidbody>();
+        m_Collider.radius = 0.5f;
     }
 
     private void FixedUpdate()

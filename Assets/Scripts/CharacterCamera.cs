@@ -3,7 +3,13 @@ using UnityEngine;
 public class CharacterCamera : MonoBehaviour
 {
     [SerializeField] private Transform m_Target;
-    [SerializeField] private Vector3 m_TargetOffset;
+
+    private Vector3 m_TargetOffset;
+
+    private void Start()
+    {
+        m_TargetOffset = transform.position;
+    }
 
     void LateUpdate()
     {
