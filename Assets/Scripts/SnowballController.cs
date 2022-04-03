@@ -15,6 +15,8 @@ public class SnowballController : MonoBehaviour
     [SerializeField]
     private TMPro.TMP_Text m_SliderValue;
 
+    public SphereCollider Collider => m_SphereCollider;
+
     private float m_Distance;
     private float AxisOffset = 0f;
     private bool m_IsTargered;
@@ -94,7 +96,12 @@ public class SnowballController : MonoBehaviour
         }
     }
 
-    void UpdateCollidersState()
+    public void ResetTarget()
+    {
+        m_IsTargered = false;
+    }
+
+    private void UpdateCollidersState()
     {
         m_PlayerCollider.enabled = AxisOffset > 0;
         m_BaseCollider.enabled = AxisOffset == 1;

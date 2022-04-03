@@ -10,9 +10,15 @@ public class CharacterController : MonoBehaviour
     public CapsuleCollider CharacterCollider;
     public VariableJoystick variableJoystick;
 
+    [SerializeField] private CharacterBag m_Bag;
+
+    public SnowballController Snowball => m_Snowball; 
+    public CharacterBag Bag => m_Bag;
+
     private Vector3 m_PlayerVelocity;
     private CapsuleCollider m_Collider;
     private Rigidbody m_Rigidbody;
+    private SnowballController m_Snowball;
 
     private readonly float gravityValue = -9.81f;
     private readonly int RunAnimation = Animator.StringToHash("Run");
@@ -49,6 +55,8 @@ public class CharacterController : MonoBehaviour
 
     public void AttachSnowball(SnowballController snowball)
     {
+        m_Snowball = snowball;
+
         Vector3 newPosition = transform.position + transform.forward * snowball.GetAxis();
         Vector3 deltaPosition = transform.position - newPosition;
 
@@ -59,5 +67,14 @@ public class CharacterController : MonoBehaviour
         snowball.transform.localPosition = new Vector3(0, snowball.transform.localPosition.y, 0);
 
         CharacterCollider.enabled = true;
+    }
+
+    public void DetachSnowball()
+    {
+        m_Snowball.transform.SetParent(null);
+        m_Snowball = null;
+
+        m_Collider.enabled = true;
+        CharacterCollider.enabled = false;
     }
 }
