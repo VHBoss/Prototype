@@ -1,15 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ConveyorArea : MonoBehaviour
 {
-    //private Transform[] m_Places;
-
-    void Start()
-    {
-        //m_Places = GetComponentsInChildren<Transform>();
-    }
+    [SerializeField] SnowballConveyor m_SnowballConveyor;
 
     public Transform GetEmptySlot()
     {
@@ -21,5 +14,10 @@ public class ConveyorArea : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void OnSlotRestored()
+    {
+        m_SnowballConveyor.ProccessIce();
     }
 }

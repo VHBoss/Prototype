@@ -6,14 +6,11 @@ public class CharacterBag : MonoBehaviour
     [SerializeField] private int m_MaxCount;
     private float m_AnimationTime = 0.2f;
 
-    private int m_CurrentCount;
-
     public bool TryAddItem(Ice ice)
     {
-        if (m_CurrentCount < m_MaxCount)
+        if (transform.childCount < m_MaxCount)
         {
-            Vector3 slotPosition = new Vector3(0, m_CurrentCount * 0.5f, 0);
-            m_CurrentCount++;
+            Vector3 slotPosition = new Vector3(0, transform.childCount * 0.5f, 0);
 
             Transform iceTransform = ice.transform;
             iceTransform.SetParent(transform);
@@ -24,5 +21,17 @@ public class CharacterBag : MonoBehaviour
         }
 
         return false;
+    }
+
+    public Transform GetIce()
+    {
+        if (transform.childCount > 0)
+        {
+            return transform.GetChild(transform.childCount - 1);
+        }
+        else
+        {
+            return null;
+        }
     }
 }

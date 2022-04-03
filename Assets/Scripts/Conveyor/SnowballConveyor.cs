@@ -10,21 +10,41 @@ public class SnowballConveyor : MonoBehaviour
     [SerializeField] private float m_NewIceEveryScale = 0.5f;
 
     private SnowballController m_Snowball;
+    private bool m_IsProcessing;
 
     public void ProcessSnowball(SnowballController snowball)
     {
         m_Snowball = snowball;
 
-        ProccessIce();
+        Proccess();
     }
 
-    private void ProccessIce()
+    public void ProccessIce()
     {
+        if (!m_IsProcessing)
+        {
+            m_IsProcessing = true;
+
+            Proccess();
+        }
+    }
+
+    private void Proccess()
+    {
+        if(m_Snowball == null)
+        {
+            m_IsProcessing = false;
+            return;
+        }
+
         Transform slot = m_Area.GetEmptySlot();
         if (slot == null)
         {
+            DestroySnowball();
             return;
         }
+
+        m_IsProcessing = true;
 
         Transform snowballTransform = m_Snowball.transform;
         float nextScale = snowballTransform.localScale.x - m_NewIceEveryScale;
@@ -34,9 +54,17 @@ public class SnowballConveyor : MonoBehaviour
         }
         else
         {
-            m_Snowball.gameObject.SetActive(false);
-            m_Snowball = null;
+            DestroySnowball();
         }
+    }
+
+    private void DestroySnowball()
+    {
+        m_IsProcessing = false;
+
+        m_Snowball.Respawn();
+        m_Snowball = null;
+        m_IsProcessing = false;
     }
 
     private void CreateIce(Transform slot)
@@ -46,6 +74,6 @@ public class SnowballConveyor : MonoBehaviour
 
         slot.gameObject.SetActive(false);
 
-        ProccessIce();
+        Proccess();
     }
 }

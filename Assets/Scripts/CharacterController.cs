@@ -41,7 +41,7 @@ public class CharacterController : MonoBehaviour
         if (move != Vector3.zero)
         {
             CharacterAnimator.SetBool(RunAnimation, true);
-            Quaternion toRotation = Quaternion.LookRotation(move, Vector3.up);
+            Quaternion toRotation = Quaternion.LookRotation(move.normalized, Vector3.up);
             Quaternion rotation = Quaternion.RotateTowards(m_Rigidbody.rotation, toRotation, rotationSpeed * Time.fixedDeltaTime);
             m_Rigidbody.MoveRotation(rotation);
         }

@@ -5,6 +5,7 @@ public class Ice : MonoBehaviour
 {
     private Collider m_Collider;
     private Transform m_Slot;
+    private float m_AnimationSpeed = 0.5f;
 
     private void Start()
     {
@@ -16,8 +17,8 @@ public class Ice : MonoBehaviour
         m_Slot = slot;
         DOTween.Sequence()
             .AppendCallback(() => { m_Collider.enabled = false; })
-            .Append(transform.DOMove(slot.position, 1))
-            .Insert(0, transform.DORotateQuaternion(Quaternion.identity, 1).OnComplete(() => { m_Collider.enabled = true; }));
+            .Append(transform.DOMove(slot.position, m_AnimationSpeed)).SetEase(Ease.InCirc)
+            .Insert(0, transform.DORotateQuaternion(Quaternion.identity, m_AnimationSpeed).OnComplete(() => { m_Collider.enabled = true; }));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -33,6 +34,7 @@ public class Ice : MonoBehaviour
                 if (m_Slot)
                 {
                     m_Slot.gameObject.SetActive(true);
+                    m_Slot.GetComponentInParent<ConveyorArea>().OnSlotRestored();
                 }
             }
         }

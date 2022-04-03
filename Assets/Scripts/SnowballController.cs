@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class SnowballController : MonoBehaviour
@@ -10,6 +11,8 @@ public class SnowballController : MonoBehaviour
     private float m_MaxSize = 10;
     [SerializeField]
     private float m_BallOffset = 0.7f;
+    [SerializeField]
+    private float m_RespawnTime = 5f;
 
     [Header("Debug")]
     [SerializeField]
@@ -27,10 +30,13 @@ public class SnowballController : MonoBehaviour
     private CapsuleCollider m_BaseCollider;
     private CapsuleCollider m_PlayerCollider;
     private SphereCollider m_SphereCollider;
+    private Vector3 m_StartPosition;
 
     private void Start()
     {
         m_SphereCollider = GetComponent<SphereCollider>();
+        m_StartPosition = transform.position;
+        m_StartScale = transform.localScale;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -40,7 +46,6 @@ public class SnowballController : MonoBehaviour
             CharacterController character = other.GetComponent<CharacterController>();
             character.AttachSnowball(this);
 
-            m_StartScale = transform.localScale;
             m_RootTransform = character.transform;
             m_PlayerTransform = character.CharacterCollider.transform;
             m_PlayerPrevPosition = m_RootTransform.position;
@@ -70,7 +75,6 @@ public class SnowballController : MonoBehaviour
 
             m_Distance += (m_RootTransform.position - m_PlayerPrevPosition).sqrMagnitude;
             m_PlayerPrevPosition = m_RootTransform.position;
-
             transform.localScale = m_StartScale + Vector3.one * m_Distance * m_GrowSpeed;
             //m_PlayerCollider.radius = transform.localScale.x * 0.5f;
         }
@@ -114,5 +118,24 @@ public class SnowballController : MonoBehaviour
         {
             m_IndentDraw.IndentAt(hit, transform.localScale.x*0.5f);
         }
+    }
+
+    public void Respawn()
+    {
+        gameObject.SetActive(false);
+
+        DOTween.Sequence()
+            .AppendInterval(m_RespawnTime)
+            .AppendCallback(() =>
+            {
+                transform.position = m_StartPosition;
+                gameObject.SetActive(true);
+            })
+            .Append(transform.DOScale(Vector3.one * 0.5f, 0.5f)).OnComplete(() =>
+            {
+                m_Distance = 0;
+                m_SphereCollider.enabled = true;
+                m_SphereCollider.isTrigger = true;
+            });
     }
 }
